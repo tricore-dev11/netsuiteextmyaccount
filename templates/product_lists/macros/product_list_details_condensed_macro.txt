@@ -1,0 +1,60 @@
+<% registerMacro('productListDisplayCondensed', function(item, view, options) { %>
+	<% 							
+		var item_internalid = item.get('internalid')
+		,	product = item.get('item')
+		,	is_checked = item.get('checked')
+		,	quantity = item.get('quantity')
+		,	priority = item.get('priority')
+		,	item_details = item.get('itemDetails')
+		,	price = item_details.getPrice()
+		,	stock_info = item_details.getStockInfo()
+		,	can_be_added_to_cart = product.ispurchasable && item.fulfillsMinimumQuantityRequirement();
+	%>
+<article data-id=<%= item_internalid %> data-item-id=<%= item_details.get('internalid') %> data-type="product-list-item" class="product-list-item-navigable-selectable product-list-condensed <%= is_checked ? 'active' : '' %>">		
+	<div class="select">
+		<input type="checkbox" value="<%= item_internalid %>" data-action="select" <%= is_checked ? 'checked' : '' %>>
+	</div>
+	<div class="item">
+		<div class="info-condensed">
+			<div class="details" data-type="item-details">
+				<p class="name">
+					<a href="#" data-touchpoint="home" data-hashtag="#<%= _(item.get('itemDetails').get('_url')).fixUrl() %>"> <%=  item.getProductName() || item.get('name') %></a>
+				</p>
+				
+				<p class="price">
+					<%= SC.macros.showItemPrice(item_details.getPrice(), stock_info.isInStock) %>
+				</p>
+
+				<div class="options-container" data-type="all-options" data-exclude-options="">					
+				</div>				
+
+				<p class="item-details-stock">
+					<%= SC.macros.itemDetailsStock(stock_info) %>
+				</p>
+
+				<%= SC.macros.productListDetailsMinQuantity(item) %>
+			</div>
+			
+			<div class="summary">
+				<p class="item-details-quantity">
+					<span class="item-details-label"><%=_('Desired Quantity').translate() %></span>: <span class="item-details-value"><%= quantity %></span>
+				</p>
+				
+				<p class="item-details-priority">
+					<span class="item-details-label"><%=_('Priority').translate() %></span>: <span class="item-details-value"><%= priority.name %></span>
+				</p>
+				
+				<p class="item-details-date-added">
+					<span><%=_('Added on').translate() %>: <%= item.get('createddate') %></span>
+				</p>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="actions" data-type="item-commands">		
+		<button class="btn btn-expanded" data-action="edit-item" data-toggle="show-in-modal"><%= _('Edit').translate() %></button>
+		<div class="move" data-type="productlist-control-move"></div>
+	</div>
+</article>	
+<% }) %>

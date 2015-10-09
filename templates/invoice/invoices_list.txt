@@ -1,0 +1,70 @@
+<h3 class="no-margin-top"><%= view.page_header %></h3>
+<a href="/" class="back-btn"><%= _('&lt; Back to Account').translate() %></a>
+
+<div class="header-links" style="padding:10px">
+	<div class="row-fluid" >
+		<button data-type="filter-open" type="button" class="btn btn-link btn-large"><%= _('Open').translate() %></button>
+		<span>|</span>
+		<button data-type="filter-paid" type="button" class="btn btn-link btn-large"><%= _('Paid in full').translate() %></button>
+		 
+	</div>
+</div>
+
+<div class="header-filters well" style="padding:10px">
+	<div class="row-fluid" >
+		<div>
+			<span ><%= _('Show').translate() %></span>
+			<select name="show" data-type="show" class="input-big">
+				<option value="30-days" <%= view.options.params.show === '30-days' ? 'selected' : '' %>> <%= _('due next 30 days').translate() %> </option>
+				<option value="date-desc" <%= view.options.params.show === 'date-desc' ? 'selected' : '' %>> <%= _('Most Recently Purchased').translate() %> </option>
+				<option value="price-desc" <%= view.options.params.show === 'price-desc' ? 'selected' : '' %>> <%= _('Price High to Low').translate() %> </option>
+				<option value="price-asc" <%= view.options.params.show === 'price-asc' ? 'selected' : '' %>> <%= _('Price Low to High').translate() %> </option>
+				<option value="name-asc" <%= view.options.params.show === 'name-asc' ? 'selected' : '' %>> <%= _('Name A to Z').translate() %> </option>
+				<option value="name-desc" <%= view.options.params.show === 'name-desc' ? 'selected' : '' %>> <%= _('Name Z to A').translate() %> </option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span6">
+			<label class="checkbox">
+				<input type="checkbox" data-type="selectall" name="selectall" value="selectAll".params> <%= _('Select All (XX of XX result)').translate() %>			
+			</label>
+		</div>
+		<div class="span6 text-right pull-right">
+			<span ><%= _('Sort by').translate() %> </span>
+			<select name="sortby" data-type="sortBy">			
+				<option value="amount-date" <%= view.options.sortBy === 'amount-date' ? 'selected' : '' %>> <%= _('Amount Due').translate() %> </option>
+			</select>
+		</div>
+	</div>
+</div>
+<div class="invoice-list-contextual-header">
+	<% if(view.selectedInvoices.length > 0) { %>
+		<div class="row-fluid">
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span6">
+						<span><%= _('Invoices ($(0))').translate(view.selectedInvoices.length)%></span>
+					</div>
+					<div class="span6">
+						<span><%= _('$$(0)').translate(view.selectedInvoicesSum())%></span>
+					</div>
+				</div>
+			</div>
+			<div class="span6">
+			</div>
+		</div>
+	<% } %>
+</div>
+
+<hr class="divider-small">
+<% if ( view.collection.length > 0) {
+		_.each(view.collection.models, function (invoice, index)
+		{ %>
+			<%= paymentWizardInvoice(invoice, true) %>
+	<% }) %>
+
+<% } else { %>
+	<p><%= _('You have not invoices').translate() %></p>
+<% } %>

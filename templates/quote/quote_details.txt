@@ -1,0 +1,295 @@
+<%
+var application = view.application
+,	quote = view.model
+,	entitystatus = quote.get('entitystatus')
+
+,	summary = quote.get('summary')
+,	total_formatted = summary.total_formatted
+
+,   items = quote.get('lineItems')
+,   items_extradata = quote.get('itemsExtradata')
+
+,   billaddress = quote.get('billaddress')
+
+,   shipping = quote.get('shipping')
+
+,   message = quote.get('message')
+,   collapse_elements = application.getConfig('collapseElements')
+
+,	duedate = quote.get('duedate') || ''
+,	is_overdue = quote.get('isOverdue')
+,	is_closeoverdue = quote.get('isCloseOverdue');
+%>
+<section class="quote-details">
+	<div class="content quote-details-view">
+		<header>
+			<h3>
+				<%= view.page_header %>
+				<div class="pull-right strong hidden-phone">
+					<span class="amount"><%= total_formatted %></span>
+				</div>
+			</h3>
+			<a href="/quotes" class="back-btn">
+				<%= _('&lt; Back to Quotes').translate() %>
+			</a>
+		</header>
+
+		<hr class="divider-small">
+
+		<!--GENERATE HEADER -->
+		<% var url = _.getDownloadPdfUrl({asset:'quote-details', 'id':quote.get('internalid')}); %>
+		<div class="header-information">
+			<div class="row-fluid">
+				<div class="span6">
+					<% if (quote.get('salesrep') && 0 < quote.get('salesrep').length) { %>
+					<p class="info">
+						<%= _('Sales rep: <span class="sales-rep">$(0)</span>').translate(quote.get('salesrep')) %>
+					</p>
+					<% } %>
+					<p class="info">
+						<%= _('Request date: <span class="date">$(0)</span>').translate(quote.get('trandate')) %>
+					</p>
+					<p class="info">
+						<% if (duedate) { %>
+							<% if (is_overdue) { %>
+								<span><%= _('Expiration date: <span class="date-overdue">$(0)</span>').translate(duedate) %></span><i class="icon-flag"></i>
+							<% } else if (is_closeoverdue) { %>
+								<span><%= _('Expiration date: <span class="date-closeoverdue">$(0)</span>').translate(duedate) %></span><i class="icon-flag"></i>
+							<% } else { %>
+								<span><%= _('Expiration date: <span class="date-due">$(0)</span>').translate(duedate) %></span>
+							<% } %>
+						<% } else { %>
+							<span><%= _('Expiration date: Not specified').translate() %></span>
+						<% } %>
+					</p>
+					<p class="info visible-phone">
+						<%= _('Amount: <span class="amount strong">$(0)</span>').translate(total_formatted) %>
+					</p>
+				</div>
+				<div class="span6 col-status-record">
+					<p class="info">
+						<%= _('Status: <span class="status">$(0)</span>').translate(entitystatus) %>
+					</p>
+				</div>
+			</div>
+
+
+		</div>
+
+		<div class="row-fluid">
+			<div class="span8 transaction-summary-one-col-tablet">
+				<!-- ITEMS -->
+				<%= SC.macros.itemDetailsLine({
+						collapse_elements: collapse_elements
+					,	lines:  items
+					,	wellHeader: items && 1 < items.length ? _('Products ($(0))').translate(items.length) : _('Product ($(0))').translate(items.length)
+					,	columns: [
+							{
+								content: '&nbsp;'
+							,	className: 'span2'
+							}
+						,	{
+								addStart: '<div class="span10 item-details-line-information">'
+							,	content: _('Product').translate()
+							,	className: 'span5 popover-content popover-heading'
+							}
+						,	{
+								content: _('Qty').translate()
+							,	className: 'span1 popover-content popover-heading col-quantity'
+							}
+						,	{
+								content: _('Unit price').translate()
+							,	className: 'span3 popover-content popover-heading col-amount'
+							}
+						,	{
+								content: _('Amount').translate()
+							,	className: 'span3 popover-content popover-heading col-amount'
+							,	addEnd: '</div>'
+							}
+						]
+					,	columnsBody: [
+							{
+								content: function(line) {return SC.macros.itemDetailsLineImage({item: line.get('item'), application: application})}
+							,	className: 'span2 item-details-line-image thumbnail item-image'
+							}
+						,	{
+								addStart: '<div class="span10 item-details-line-information">'
+							,	content: function(line) {return SC.macros.itemDetailsLineProduct({item: line.get('item')})}
+							,	className: 'span5 popover-content'
+							}
+						,	{
+								content: function(line) {return _('<span class="visible-phone text-light">Quantity:</span> <span class="item-quantity">$(0)</span>').translate(line.get('quantity'))}
+							,	className: 'span1 popover-content col-quantity'
+							}
+						,	{
+								content: function(line) {return _('<span class="visible-phone text-light">Unit price:</span> <span class="item-price">$(0)</span>').translate(line.get('rate_formatted'))}
+							,	className: 'span3 popover-content col-amount'
+							}
+						,	{
+								content: function(line) {return _('<span class="visible-phone text-light">Amount:</span> <span class="item-amount">$(0)</span>').translate(line.get('amount_formatted'))}
+							,	className: 'span3 popover-content col-amount'
+							,	addEnd: '</div>'
+							}
+						]
+				}) %>
+
+				<!-- ITEMSEXTRADATA -->
+				<div class="row-fluid control-group" data-type="accordion">
+					<div class="well-secundary discount-info-container" data-action="items-expander">
+						<div class="well-header">
+							<%= _('<span class="discount-info-drop-down">Discount information</span>').translate() %>
+							<a href="#" class="pull-right"><i class="icon-plus"></i></a>
+						</div>
+					</div>
+					<div data-content="items-body" style="display: none;">
+						<div class="row-fluid nav-tabs">
+							<div class="span12 popover-content">
+								<div class="extrainfo">
+									<div class="main-container">
+										<div class="span12">
+											<% if (items_extradata) { %>
+												<div class="row-fluid coupon-code">
+													<div class="span4 text-light"><%= _('Coupon Code:').translate() %></div>
+													<div class="span8"><%= items_extradata.couponcode %></div>
+												</div>
+												<div class="row-fluid promotion">
+													<div class="span4 text-light"><%= _('Promotion:').translate() %></div>
+													<div class="span8"><%= items_extradata.promocode %></div>
+												</div>
+												<div class="row-fluid exchange-rate">
+													<div class="span4 text-light"><%= _('Exchange Rate:').translate() %></div>
+													<div class="span8"><%= items_extradata.exchangerate_formatted %></div>
+												</div>
+												<div class="row-fluid discount">
+													<div class="span4 text-light"><%= _('Discount:').translate() %></div>
+													<div class="span8"><%= items_extradata.discountitem %></div>
+												</div>
+												<div class="row-fluid rate">
+													<div class="span4 text-light"><%= _('Rate:').translate() %></div>
+													<div class="span8"><%= items_extradata.discountrate %></div>
+												</div>
+											<% } else { %>
+												<%= _('N/A').translate() %>
+											<% } %>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- BILLADDRESS -->
+				<div class="row-fluid control-group  billaddress-container" data-type="accordion">
+					<div class="well-secundary" data-action="items-expander">
+						<div class="well-header">
+							<%= _('<span class="billaddress-drop-down">Billing address</span>').translate() %>
+							<a href="#" class="pull-right"><i class="icon-plus"></i></a>
+						</div>
+					</div>
+					<div data-content="items-body" style="display: none;">
+						<div class="row-fluid nav-tabs">
+							<div class="span12 popover-content">
+								<div class="billaddress">
+									<div class="main-container">
+										<div class="span4 text-light">
+											<%= _('Bill to:').translate() %>
+										</div>
+										<div class="span8 billaddress-info">
+											<address>
+												<%= billaddress || _('N/A').translate() %>
+											</address>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- MESSAGE -->
+				<div class="row-fluid control-group message-container" data-type="accordion">
+					<div class="well-secundary" data-action="items-expander">
+						<div class="well-header">
+							<%= _('<span class="message-drop-down">Message</span>').translate() %>
+							<a href="#" class="pull-right"><i class="icon-plus"></i></a>
+						</div>
+					</div>
+					<div data-content="items-body" style="display: none;">
+						<div class="row-fluid nav-tabs">
+							<div class="span6 popover-content">
+								<div class="main-container">
+									<div class="span12">
+										<div class="message-content">
+											<%= message || _('N/A').translate() %>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="span4 transaction-summary-one-col-tablet">
+				<div class="row-fluid">
+					<div class="list-header summary-container">
+						<div class="nav-tabs row-fluid control-group strong quote-details-summary-header">
+							<%= _('SUMMARY').translate() %>
+						</div>
+						<div class="row-fluid control-group summary-subtotal-container">
+							<div class="span8 summary-subtotal-label ">
+								<%= _('Subtotal').translate() %>
+							</div>
+							<div class="span4 text-right summary-subtotal">
+								<%= summary.subtotal_formatted %>
+							</div>
+						</div>
+
+						<div class="row-fluid control-group summary-discount-container">
+							<div class="span8 summary-discount-label">
+								<%= _('Discount').translate() %>
+							</div>
+							<div class="span4 text-right summary-discount">
+								<%= summary.discounttotal_formatted %>
+							</div>
+						</div>
+
+						<div class="row-fluid control-group summary-tax-total-container">
+							<div class="span8 summary-tax-total-label">
+								<%= _('Tax Total').translate() %>
+							</div>
+							<div class="span4 text-right summary-tax-total">
+								<%= summary.taxtotal_formatted %>
+							</div>
+						</div>
+
+						<div class="nav-tabs row-fluid control-group summary-shipping-cost-container">
+							<div class="span8 summary-shipping-cost-label">
+								<%= _('Shipping Cost').translate() %>
+							</div>
+							<div class="span4 text-right summary-shipping-cost">
+								<%= summary.shippingcost_formatted %>
+							</div>
+						</div>
+
+						<div class="row-fluid control-group strong total summary-total-container">
+							<div class="span8 summary-total-label">
+								<%= _('Total').translate() %>
+							</div>
+							<div class="span4 text-right last summary-total">
+								<%= total_formatted %>
+							</div>
+						</div>
+					</div>
+
+					<div class="row-fluid">
+						<div class="span4 transaction-summary-one-col-desktop margin-top-10">
+							<a href="<%= url %>" target="_blank" class="btn btn-expanded btn-block btn-large download-pdf-btn"><%= _('Download as PDF').translate() %></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

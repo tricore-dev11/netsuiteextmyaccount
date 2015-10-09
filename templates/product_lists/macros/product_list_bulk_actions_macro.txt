@@ -1,0 +1,29 @@
+<% registerMacro('productListBulkActions', function(model, options) { 
+
+var some_checked_items_exist = model.someCheckedItemsExist();
+
+if (model.get('items').length) { %>
+
+	<div class="btn-group pull-right">
+	  <button class="btn btn-primary" data-action="add-items-to-cart" <%= some_checked_items_exist && model.canBeAddedToCart(true) ? '': 'disabled' %> ><%= _('Add Items to Cart').translate() %></button>
+	  <button class="btn btn-primary dropdown-toggle dropdown-toggle-touch" data-toggle="dropdown" <%= some_checked_items_exist ? '' : 'disabled' %> >
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		<li><a href="#" data-action="delete-items" <%= some_checked_items_exist ? '': 'disabled' %> ><%= _('Remove Items').translate() %></a></li>
+	  </ul>
+	</div>
+
+<% } else { %>
+
+	<% if (model.get('type').name !== 'predefined') { %>
+		<div class="btn-group pull-right list-actions">
+			<a href="#" data-action="edit-list" class="btn"><%= _('Edit list').translate()%></a>
+			<a href="#" class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="#" data-action="delete-list"><%= _('Delete this list').translate()%></a></li>
+			</ul>
+		</div>
+	<% } %>
+
+<% }}) %>
