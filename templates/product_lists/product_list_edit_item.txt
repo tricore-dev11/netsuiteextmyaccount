@@ -18,7 +18,8 @@
 			</div>
 			<div class="span8 item-details" data-type="item-details">
 				<h5 class="item-details-name">
-					<a href="#" data-touchpoint="home" data-hashtag="product/<%= product.internalid %>"> <%= product.displayname %></a>
+					<!-- <a href="#" data-touchpoint="home" data-hashtag="product/<%= product.internalid %>"> <%= product.displayname %></a>-->
+                                        <a href="<%= _(item.get('itemDetails').get('_url')).fixUrl() %>" target="_blank"> <%=  item.getProductName() %></a>
 				</h5>
 
 				<div class="item-details-date-added">

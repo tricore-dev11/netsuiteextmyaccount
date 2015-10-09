@@ -3,9 +3,9 @@
 	,	items = view.model.get('items')
 	,	should_hide_list_header = items.length === 0 && view.model.get('type').name === 'predefined'
 	,	options = {
-			hide_actions: true
-		,	show_edit_action: true
-		,	show_move_action: true
+			hide_actions: false
+		,	show_edit_action: false
+		,	show_move_action: false
 	};
 %>
 <section class="product_list_details">

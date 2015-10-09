@@ -919,8 +919,8 @@ function addAddressToResult (address, result)
 
 	result.addresses = result.addresses || {};
 
-	address.fullname = address.attention ? address.attention : address.addressee;
-	address.company = address.attention ? address.addressee : null;
+	address.fullname = address.addressee ? address.addressee : address.attention;
+	address.company = address.attention ? address.attention : null;
 
 	delete address.attention;
 	delete address.addressee;
@@ -934,6 +934,7 @@ function addAddressToResult (address, result)
 								(address.addr1 || '') + '-' +
 								(address.addr2 || '') + '-' +
 								(address.fullname || '') + '-' +
+                                                                (address.label || '') + '-' +
 								address.company;
 
 		address.internalid = address.internalid.replace(/\s/g, '-');

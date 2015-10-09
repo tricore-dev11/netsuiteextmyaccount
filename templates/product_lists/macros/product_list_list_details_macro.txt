@@ -75,9 +75,10 @@
 		<% if (list.get('type').name !== 'predefined') { %>
 			<div class="btn-group">
 				<button class="btn btn-expanded" data-action="edit-list"><%= _('Edit List').translate() %></button>
-			    <button class="btn btn-caret dropdown-toggle" data-toggle="dropdown">
-			    <span class="caret"></span>
-			    </button>
+                                <!--	<button class="btn btn-caret dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span> 
+			    </button> -->
+                            <button class="btn btn-expanded" data-action="delete-list"><%= _('Delete List').translate() %></button>
 				<ul class="dropdown-menu">
 					 <li><a href="#" data-action="delete-list"><%= _('Delete List').translate() %></a></li>
 				</ul>

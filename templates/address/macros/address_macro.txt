@@ -2,8 +2,8 @@
 	options = options || {};
 
 	var label = address.get('label')
-	,	company = (SC.ENVIRONMENT.siteSettings.registration.displaycompanyfield === 'T') ? address.get('company') : null
-	,	fullname = address.get('fullname')
+	,	company = (SC.ENVIRONMENT.siteSettings.registration.displaycompanyfield === 'T') ? address.get('attention') : null
+	,	fullname = address.get('addressee')
 	,	countries = SC.ENVIRONMENT.siteSettings.countries
 	,	country_object = countries[address.get('country')]
 	,	country = (country_object)? country_object.name : address.get('country')

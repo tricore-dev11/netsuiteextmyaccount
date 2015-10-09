@@ -83,6 +83,8 @@ SC.Configuration = {
 		,	'storedisplayimage'
 		,	'storedisplayname2'
 		,	'storedisplaythumbnail'
+               ,        'matrixchilditems_detail'
+	      ,        'matrix_parent'
 	]
 
 	// product reviews configuration
@@ -114,7 +116,7 @@ SC.Configuration = {
 		// by default. This lists will be of type=predefined and they cannot be modified/deleted.
 		// Note: Associated record will be created only when the customer add some product to the list.
 	,	list_templates: [
-			{
+		/*	{
 				templateid: '1'
 			,	name: 'My list'
 			,	description: 'An example predefined list'
@@ -122,9 +124,9 @@ SC.Configuration = {
 					id: '2'
 				,	name: 'private'
 				}
-			}
+			} 
 
-		,	{
+		,*/	{
 				templateid: '2'
 			,	name: 'Saved for Later'
 			,	description: 'This is for the cart saved for later items'

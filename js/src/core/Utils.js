@@ -863,6 +863,55 @@
 			}
 		});
 	}
+	
+	/* Added By tricore.dev11 Date:03/08/2015 Comment: To Add PO BOX validation for Address1 and Address2 */
+	function validateAddressSec (addr2)
+	{
+		var rejected_addresses = new Array("po","po box","p.o. box","p.o box","pobox","p.o.","p.o.box","post office");
+		if(addr2)
+		{
+			var addr2_lower = addr2.toLowerCase();
+			var result_addr = addr2_lower.match(/po box|p.o. box|p.o box|pobox|post box|p.o.|p.o.box|po\W|\Wpo\W|post office/);
+			if(result_addr !== null && result_addr.length > 0)
+			{
+				error_flag = true;
+			}
+			else 
+			{
+				error_flag = false;
+			}
+			if(error_flag)
+			{
+				return _('We do not ship to PO Boxes. Please correct address.').translate();
+			}	
+		}
+	}
+	function validateAddressFirst (addr1)
+	{
+		var rejected_addresses = new Array("po","po box","p.o. box","p.o box","pobox","p.o.","p.o.box","post office");
+		if(addr1)
+		{
+			var addr1_lower = addr1.toLowerCase();
+			var result_addr = addr1_lower.match(/po box|p.o. box|p.o box|pobox|post box|p.o.|p.o.box|po\W|\Wpo\W|post office/);
+			if(result_addr !== null && result_addr.length > 0)
+			{
+				error_flag = true;
+			}
+			else 
+			{
+				error_flag = false;
+			}
+			if(error_flag)
+			{
+				return _('We do not ship to PO Boxes. Please correct address.').translate();
+			}
+		}
+		else
+		{
+			return _('Address1 is required').translate();
+		}
+	}
+	/* Added By tricore.dev11 Date:31/07/2015 Comment: To Add PO BOX validation for Address1 and Address2 */
 
 	SC.Utils = {
 		translate: translate
@@ -899,6 +948,8 @@
 	,	getSessionParams: getSessionParams
 	,	findItemInCart: findItemInCart
 	,	getParameterByName: getParameterByName
+        ,       validateAddressSec: validateAddressSec
+	,       validateAddressFirst: validateAddressFirst
 	};
 
 	// We extend underscore with our utility methods

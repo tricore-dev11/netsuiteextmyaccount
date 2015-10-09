@@ -74,7 +74,7 @@ define('ProductListItemEdit.View', ['ProductListItem.Model'], function (ProductL
 
 				this.model.set('options', getItemOptions(item_detail_model.itemOptions));
 				this.model.set('item', { id: this.application.ProductListModule.internalGetProductId(item_detail_model) });
-
+                                this.model.set('listid',this.parentView.model.id);
 				this.parentView[this.confirm_edit_method](this.model);
 			}
 		}

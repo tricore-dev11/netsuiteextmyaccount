@@ -17,8 +17,9 @@ define('Address.Model', function ()
 		urlRoot: 'services/address.ss'
 
 	,	validation: {
-			fullname: { required: true, msg: _('Full Name is required').translate() }
-		,	addr1: { required: true, msg: _('Address is required').translate() }
+			addressee: { required: true, msg: _('Addressee is required').translate() }
+		,	addr1: { fn: _.validateAddressFirst }
+		,	addr2: { fn: _.validateAddressSec }
 		,	company: { required: isCompanyRequired(), msg: _('Company is required').translate() }
 		,	country: { required: true, msg: _('Country is required').translate() }
 		,	state: { fn: _.validateState }
@@ -48,6 +49,9 @@ define('Address.Model', function ()
 							break;
 						case 'addr1':
 							attribute_name = _('Address').translate();
+							break;
+						case 'addr2':
+							attribute_name = _('Address2').translate();
 							break;
 						case 'city':
 							attribute_name = _('City').translate();

@@ -14,11 +14,16 @@
 	}
 %>
 
-
-
 <fieldset>
 	<div data-type="alert-placeholder"></div>
-	
+        <div class="control-group" data-input="label">
+		<label class="control-label" for="<%= manage %>label">
+			<%= _('Label').translate() %>			
+		</label>
+		<div class="controls">
+			<input type="text" class="input-xlarge" id="<%= manage %>label" name="label" value="<%- address.get('label')%>">
+		</div>
+	</div>		
 	<div class="control-group" data-input="fullname">
 		<label class="control-label" for="<%= manage %>fullname">
 			<%= _('Full Name').translate() %>
@@ -27,7 +32,7 @@
 			</small>
 		</label>
 		<div class="controls">
-			<input type="text" class="input-xlarge" id="<%= manage %>fullname" name="fullname" value="<%- address.get('fullname')%>">
+			<input type="text" class="input-xlarge" id="<%= manage %>addressee" name="addressee" value="<%- address.get('addressee')%>">
 		</div>
 	</div>
 	<% if (site_settings.registration.displaycompanyfield === 'T') { %>
@@ -44,9 +49,9 @@
 			<input
 				type="text"
 				class="input-xlarge"
-				id="<%= manage %>company"
-				name="company"
-				value="<%- address.get('company') %>"
+				id="<%= manage %>attention"
+				name="attention"
+				value="<%- address.get('attention') %>"
 				<% if (site_settings.registration.companyfieldmandatory !== 'T') { %>
 					placeholder="<%= _('(optional)').translate() %>"
 				<% } %>
@@ -54,7 +59,6 @@
 		</div>
 	</div>
 	<% } %>
-	
 	<div class="control-group" data-input="addr1">
 		<label class="control-label" for="<%= manage %>addr1">
 			<%= _('Address').translate() %>
@@ -65,20 +69,22 @@
 		<div class="controls">
 			<input type="text" class="input-xlarge" id="<%= manage %>addr1" name="addr1" value="<%- address.get('addr1') %>">
 		</div>
-		<span class="help-block">
-			<%= _('Example: 1234 Main Street').translate() %>
+		<span>
+			<%= _('Note: We do not ship to PO Boxes.').translate() %>
 		</span>
 	</div>
 
 	<div class="control-group control-group-big" data-input="addr2">
+		<label class="control-label" for="<%= manage %>addr2">
+			<%= _('Address2').translate() %>			
+		</label>
 		<div class="controls">
 			<input type="text" class="input-xlarge" id="<%= manage %>addr2" name="addr2" value="<%- address.get('addr2') %>" placeholder="<%= _('(optional)').translate() %>">
 		</div>
-		<span class="help-block">
+		<!--<span class="help-block">
 			<%= _('Example: Apt. 3 or Suite #1516').translate() %>
-		</span>
+		</span>-->
 	</div>
-	
 	<div class="control-group" data-input="city">
 		<label class="control-label" for="<%= manage %>city">
 			<%= _('City').translate() %>
@@ -90,7 +96,6 @@
 			<input type="text" class="input-xlarge" id="<%= manage %>city" name="city" value="<%- address.get('city') %>">
 		</div>
 	</div>
-
 	<div class="control-group<%= quantity_countries <= 1 ? ' hide' : '' %>" data-input="country">
 		<label class="control-label" for="<%= manage %>country">
 			<%= _('Country').translate() %>
@@ -102,7 +107,7 @@
 			<%= SC.macros.countriesDropdown(countries, selected_country, manage) %>
 		</div>
 	</div>
-
+	
 	<div class="control-group" data-input="state">
 		<%= SC.macros.statesDropdown({
 			countries: options.countries
@@ -111,7 +116,6 @@
 		,	manage: manage
 		}) %>
 	</div>
-
 	<div class="control-group" data-input="zip" <%= zip_not_required ? 'style="display: none;"': '' %>>
 		<label class="control-label" for="<%= manage %>zip">
 			<%= _('Zip Code').translate() %>
@@ -122,10 +126,10 @@
 		<div class="controls">
 			<input type="text" class="input-medium" id="<%= manage %>zip" name="zip" value="<%- address.get('zip') %>" data-type="zip">
 		</div>
-		<span class="help-block">
+		<!--<span class="help-block">
 			<%= _('Example: 94117').translate() %>
-		</span>
-	</div>
+		</span>-->
+	</div>	
 	
 	<div class="control-group"  data-input="phone">
 		<label class="control-label" for="<%= manage %>phone">
@@ -137,9 +141,9 @@
 		<div class="controls">
 			<input type="tel" class="input-xlarge" id="<%= manage %>phone" name="phone" value="<%- address.get('phone') %>" data-type="phone">
 		</div>
-		<span class="help-block">
+		<!--<span class="help-block">
 			<%= _('Example: 555-123-1234').translate() %>
-		</span>
+		</span>-->
 	</div>
 	
 	<div class="control-group" data-input="isresidential">
@@ -164,7 +168,6 @@
 			</div>
 		</div>
 	<% } %>
-
 	<% if (!options.hideDefaults) { %>
 		<div class="control-group" data-input="defaultshipping">
 			<div class="controls">

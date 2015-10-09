@@ -238,7 +238,7 @@
 	,	isSearchGlobal: true
 
 		// url for the not available image
-	,	imageNotAvailable: _.getAbsoluteUrl('img/no_image_available.jpeg')
+	,	imageNotAvailable: _.getAbsoluteUrl('img/no_image.png')
 
 		// map of image custom image sizes
 		// usefull to be customized for smaller screens
@@ -328,8 +328,6 @@
 
 			reasons: [
 				_('Wrong Item Shipped').translate()
-			,	_('Did not fit').translate()
-			,	_('Quality did not meet my standards').translate()
 			,	_('Not as pictured on the Website').translate()
 			,	_('Damaged during shipping').translate()
 			,	_('Changed my mind').translate()

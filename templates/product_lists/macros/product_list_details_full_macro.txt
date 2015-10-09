@@ -24,10 +24,13 @@
 		</div>
 		<div class="info">
 			<div class="details" data-type="item-details">
-				<p class="name">
+				<!-- <p class="name">
 					<a href="#" data-touchpoint="home" data-hashtag="#<%= _(item.get('itemDetails').get('_url')).fixUrl() %>"> <%=  item.getProductName() || item.get('name') %></a>
-				</p>
+				</p> -->
 				
+				<p class="name">
+					<a href="<%= _(item.get('itemDetails').get('_url')).fixUrl() %>" target="_blank"> <%=  item.getProductName() %></a>
+				</p>
 				<p class="price">
 					<%= SC.macros.showItemPrice(item_details.getPrice(), stock_info.isInStock) %>
 				</p>		

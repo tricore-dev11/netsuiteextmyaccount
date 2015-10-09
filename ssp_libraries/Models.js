@@ -172,11 +172,11 @@ Application.defineModel('Address', {
 ,	wrapAddressee: function (address)
 	{
 		'use strict';
-
+                   console.log(address.addressee);console.log(address.attention);
 		if (address.attention && address.addressee)
 		{
-			address.fullname = address.attention;
-			address.company = address.addressee;
+			address.fullname = address.addressee;
+			address.company = address.attention;
 		}
 		else
 		{
@@ -197,8 +197,8 @@ Application.defineModel('Address', {
 
 		if (address.company)
 		{
-			address.attention = address.fullname;
-			address.addressee = address.company;
+			address.attention = address.company;
+			address.addressee = address.fullname;
 		}
 		else
 		{
@@ -217,8 +217,8 @@ Application.defineModel('Address', {
 ,	get: function (id)
 	{
 		'use strict';
-
-		return this.wrapAddressee(customer.getAddress(id));
+		console.log(id);
+		return customer.getAddress(id);
 	}
 
 // return default billing address
@@ -252,7 +252,7 @@ Application.defineModel('Address', {
 
 		return  _.map(customer.getAddressBook(), function (address)
 		{
-			return self.wrapAddressee(address);
+			return address;
 		});
 	}
 
@@ -261,8 +261,11 @@ Application.defineModel('Address', {
 	{
 		'use strict';
 
-		data = this.unwrapAddressee(data);
-
+		/*data = this.unwrapAddressee(data);*/
+                if(data.addr1 == data.addr2 || data.addr2 == data.zip)
+		{
+			data.addr2 = '';
+		}
 		// validate the model
 		this.validate(data);
 		data.internalid = id;
@@ -275,7 +278,7 @@ Application.defineModel('Address', {
 	{
 		'use strict';
 
-		data = this.unwrapAddressee(data);
+		/*data = this.unwrapAddressee(data);*/
 		// validate the model
 		this.validate(data);
 
@@ -922,11 +925,11 @@ Application.defineModel('PlacedOrder', {
 		'use strict';
 		result.addresses = result.addresses || {};
 
-		address.fullname = (address.attention) ? address.attention : address.addressee;
-		address.company = (address.attention) ? address.addressee : null;
+		/*address.fullname = (address.addressee) ? address.addressee : address.attention;
+		address.company = (address.attention) ? address.attention : null;
 
 		delete address.attention;
-		delete address.addressee;
+		delete address.addressee;*/
 
 		address.internalid =	(address.country || '')  + '-' +
 								(address.state || '') + '-' +
@@ -934,8 +937,9 @@ Application.defineModel('PlacedOrder', {
 								(address.zip || '') + '-' +
 								(address.addr1 || '') + '-' +
 								(address.addr2 || '') + '-' +
-								(address.fullname || '') + '-' +
-								(address.company || '');
+								(address.addressee || '') + '-' +
+								(address.label || '') + '-' +
+								(address.attention || '');
 
 		address.internalid = address.internalid.replace(/\s/g, '-');
 
@@ -1682,12 +1686,12 @@ Application.defineModel('LiveOrder', {
 
 		if (!address.fullname)
 		{
-			address.fullname = address.attention ? address.attention : address.addressee;
+			address.fullname = address.addressee ? address.addressee : address.attention;
 		}
 
 		if (!address.company)
 		{
-			address.company = address.attention ? address.addressee : null;
+			address.company = address.attention ? address.attention : null;
 		}
 
 		delete address.attention;
@@ -5674,4 +5678,3 @@ Application.defineModel('Case', {
 		}
 	}
 });
-
