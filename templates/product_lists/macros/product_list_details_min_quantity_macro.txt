@@ -1,0 +1,13 @@
+<% registerMacro('productListDetailsMinQuantity', function(item) { 
+	var item_details = item.get('itemDetails');	
+%>
+
+<% if (!item.fulfillsMinimumQuantityRequirement()) { %>
+	<p class="minquantity">
+		<span class="label label-warning products-not-purchasable-message" style="white-space:normal">
+			<%= _('The minimum quantity to purchase this item is <b>$(0)</b>. Do you want to change it <b>from $(1) to $(0)?</b> ').translate(item_details.get('minimumquantity'), item.get('quantity')) %>
+			<a href="#" data-action="update-item-quantity"><%= _('Yes, update it').translate() %></a>
+		</span>
+	</p>
+<% }%>
+<% }) %>

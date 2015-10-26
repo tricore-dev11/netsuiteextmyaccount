@@ -1,0 +1,100 @@
+<% registerMacro('productListDisplayFull', function(item, view, options) { 
+	var item_internalid = item.get('internalid')
+	,	product = item.get('item')
+	,	is_checked = item.get('checked')
+	,	quantity = item.get('quantity')
+	,	priority = item.get('priority')
+	,	description = item.get('description')
+	,	item_details = item.get('itemDetails')
+	,	thumbnail = item_details.get('_thumbnail')
+	,	rating = item_details.get('_rating')
+	,	stock_info = item_details.getStockInfo()
+	,	minimum_quantity = item_details.get('minimumquantity')
+	,	can_be_added_to_cart = product.ispurchasable && item.fulfillsMinimumQuantityRequirement();
+%>
+<article data-id=<%= item_internalid %> data-item-id=<%= item_details.get('internalid') %> data-type="product-list-item" class="product-list-item-navigable-selectable <%= is_checked ? 'active' : '' %>" >
+	<% if(!options || !options.hide_checkbox) { %>
+		<div class="select">
+			<input type="checkbox" value="<%= item_internalid %>" data-action="select" <%= is_checked ? 'checked' : '' %>>
+		</div>
+	<% } %>	
+	<div class="item">
+		<div class="thumbnail" data-type="product-list-item">
+			<img src="<%= view.application.resizeImage(thumbnail.url, 'thumbnail') %>" alt="<%=thumbnail.altimagetext %>">
+		</div>
+		<div class="info">
+			<div class="details" data-type="item-details">
+				<p class="name">
+					<a href="#" data-touchpoint="home" data-hashtag="#<%= _(item.get('itemDetails').get('_url')).fixUrl() %>"> <%=  item.getProductName() || item.get('name') %></a>
+				</p>
+				
+				<p class="price">
+					<%= SC.macros.showItemPrice(item_details.getPrice(), stock_info.isInStock) %>
+				</p>		
+
+				<% if(!options || !options.hide_rating) { %>
+				<p class="item-rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+					<%= SC.macros.starRating({
+						max: view.options.application.getConfig('productReviews.maxRate')
+						,	value: rating
+						,	ratingCount: item_details.get('_ratingsCount')
+						,	showRatingCount: true
+						,	className: 'star pull-left'
+						,	fillRounded: true
+					}) %>
+				</p>
+				<% } %>								
+
+				<div class="options-container" data-type="all-options" data-exclude-options="">					
+				</div>				
+
+				<p class="item-details-stock">
+					<%= SC.macros.itemDetailsStock(stock_info) %>
+				</p>
+
+				<%= SC.macros.productListDetailsMinQuantity(item) %>
+			</div>
+			
+			<div class="summary">
+				<p class="item-details-quantity">
+					<span class="item-details-label"><%=_('Desired Quantity').translate() %></span>: <span class="item-details-value"><%= quantity %></span>
+				</p>
+				
+				<p class="item-details-priority">
+					<span class="item-details-label"><%=_('Priority').translate() %></span>: <span class="item-details-value"><%= priority.name %></span>
+				</p>
+
+				<% if(!options || !options.hide_added_on) { %>
+				<p class="item-details-date-added">
+					<span><%=_('Added on: $(0)').translate(item.get('createddate')) %></span>
+				</p>
+				<% } %>
+
+				<p class="item-details-notes" data-type="item-details-notes">
+					<% if(description) { %>
+						<p><%= _('Notes: ').translate() + description %></p>
+					<% } %>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="actions" data-type="item-commands">
+		<% if (!options || !options.hide_actions) { %>		
+			<button data-action="add-to-cart" class="btn btn-primary btn-expanded add-to-cart <%= !can_be_added_to_cart ? 'disabled' : ''%>" <%= !can_be_added_to_cart ? 'disabled' : ''%>><%= _('Add to Cart').translate() %></button>
+			<button class="btn btn-expanded" data-action="edit-item" data-toggle="show-in-modal"><%= _('Edit').translate() %></button>
+			<button class="btn btn-expanded" data-action="delete-item"><%= _('Delete').translate() %></button>
+			<div class="move" data-type="productlist-control-move"></div>
+		<% } %>
+
+		<% if (options && options.show_edit_action) { %>		
+			<button class="btn btn-expanded" data-action="edit-item" data-toggle="show-in-modal"><%= _('Edit').translate() %></button>
+		<% } %>
+		<% if (options && options.show_move_action) { %>		
+			<div class="move" data-type="productlist-control-move"></div>
+		<% } %>
+
+	</div>
+
+</article>	
+<% }) %>

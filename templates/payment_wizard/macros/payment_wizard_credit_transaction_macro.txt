@@ -1,0 +1,59 @@
+<% registerMacro('paymentWizardCreditTransaction', function (options) { %>
+<%
+	var type = options.type
+	,	transaction = options.transaction
+	,	applied = transaction.get('apply')
+	,	disabled = !applied && !options.total
+	,	selectable = !options.readOnly
+	,	total_formatted = transaction.get('total_formatted')
+	,	remaining_formatted = transaction.get('remaining_formatted');
+%>
+<div class="list-row <%= disabled ? 'disabled' : selectable ? 'selectable' : '' %>" data-type="transaction" data-id="<%= transaction.get('internalid') %>">
+	<div class="row-fluid" data-action="select" data-id="<%= transaction.get('internalid') %>">
+		<% if (selectable) { %>
+			<div class="span1">
+				<input type="checkbox" <%= applied ? 'checked' : disabled ? 'disabled' : '' %> value="<%= transaction.get('internalid') %>" data-action="select">
+			</div>
+		<% } %>
+		<div class="span11 header-list">
+			<div class="span2 <%= !selectable ? 'offset1' : '' %>">
+				<span class="list-row-text <%= type %>-number">
+					<span class="list-row-text-bigger input-margin <%= type %>-number">
+						<%= transaction.get('type') || '' %> #<%= transaction.get('refnum')%>
+					</span>
+				</span>
+			</div>
+			<div class="span3 offset-xs-1 col-amount">
+				<span class="list-row-text">
+					<% if (remaining_formatted !== total_formatted) { %>
+						<span class="<%= type %>-originial-amount">
+							<%= total_formatted %>
+						</span>
+					<% } else { %>
+						&nbsp;
+					<% } %>
+				</span>
+			</div>
+			<div class="span3 offset-xs-1 col-amount">
+				<span class="list-row-text">
+					<span class="visible-phone list-row-text-info"><%= _('Remaining Amount: ').translate() %></span>
+					<span class="<%= type %>-remaining-amount"><%= remaining_formatted %> </span>
+				</span>
+			</div>
+			<div class="span2 offset-xs-1 col-amount">
+				<span class="list-row-text">
+					<span class="visible-phone list-row-text-info"><%= _('Amount: ').translate() %></span>
+					<span class="<%= type %>-amount"><%= transaction.get('amount_formatted') %> </span>
+				</span>
+			</div>
+			<div class="span2 offset-xs-1 col-amount">
+				<span class="list-row-text">
+					<% if (applied) { %>
+						<a class="list-link-box" data-action="edit" href="#"><%= _('Edit').translate() %></a>
+					<% } %>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<% }) %>

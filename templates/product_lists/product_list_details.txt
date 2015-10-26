@@ -1,0 +1,64 @@
+<%
+	var config = view.application.Configuration.product_lists
+	,	items = view.model.get('items')
+	,	should_hide_list_header = items.length === 0 && view.model.get('type').name === 'predefined'
+	,	options = {
+			hide_actions: true
+		,	show_edit_action: true
+		,	show_move_action: true
+	};
+%>
+<section class="product_list_details">
+	<header>
+		<h3 class="list-header-title">
+			<%= view.model.get('type').name === 'predefined' ? _(view.model.get('name')).translate() : view.model.get('name') %> 
+			<% if (items.length > 0) { %>
+				<span class="product-list-details-count">(<%= items.length %> <%= items.length===1 ? _('Product').translate() : _('Products').translate() %>)</span>
+			<% } %>
+		</h3>
+
+		<a href="/" class="back-btn">
+			<%= _('&lt; Back to Account').translate() %>
+		</a>
+
+		<hr class="divider-small">
+		
+		<div data-confirm-message class="confirm-message"></div>
+	</header>	
+
+ 	<div data-type="list-header-placeholder" style="<%= should_hide_list_header ? 'display:none':'' %>"></div>
+
+	<%
+		var items = view.model.get('items');
+
+		if (items.length > 0)
+		{			
+			var displayOption = view.getDisplayOption();
+	%>
+
+
+			<div class="product-list-items" data-type="product-list-items">
+
+				<% displayOption.columns = parseInt(displayOption.columns, 10) || 3; %>
+				<% var span = 12 / displayOption.columns; %>
+				<div class="row-fluid">
+				<% _.each(items.models, function (item, index){ %>
+					<% if ((index % displayOption.columns) == 0 && index > 0){ %>
+						</div>
+						<div class="row-fluid">
+					<% } %>
+					<div class="span<%= span %>">
+						<%= SC.macros[displayOption.macro](item, view, options) %>
+					</div>
+				<% }) %>
+				</div>
+
+			</div>
+	<% } else { %>
+
+		
+		<div>
+			<p class="product-list-no-items-message list-empty"><%= _('You don\'t have items in this list yet. Explore the store or search for an item you would like to add.').translate() %></p>
+		</div>
+	<% } %>
+</section>

@@ -1,0 +1,64 @@
+<%
+	var model = view.model
+	,	collapse_elements = view.application.getConfig('collapseElements')
+	%>
+
+<div class="payment-table <%= view.transaction_type === 'credit' ? 'credits-table' : 'deposits-table' %>" data-type="accordion">
+	<div class="well" data-action="items-expander">
+		<div class="well-header">
+			<span class="items-drop-down">
+			<%= view.transaction_type === 'credit' ? _('Credits (<span class="credits-count">$(0)</span>)').translate(view.collection.length) : _('Deposits (<span class="deposits-count">$(0)</span>)').translate(view.collection.length) %>
+			</span>
+			<a href="#" class="pull-right"><i class="icon-plus  icon-minus items-minimize"></i></a>
+		</div>
+	</div>
+	<div <%= collapse_elements ? 'style="display: none;"' : '' %>  data-content="items-body">
+		<div class="list-sub-header hidden-phone">
+			<div class="row-fluid">
+				<div class="span1">
+					&nbsp;
+				</div>
+				<div class="span11 header-list">	
+					<div class="span2">
+						<span><%= _('Number').translate() %></span>
+					</div>	
+					<div class="span3 col-amount">
+						<span><%= _('Original amount').translate() %></span>
+					</div>
+					<div class="span3 col-amount">
+						<span><%= _('Remaining amount').translate() %></span>
+					</div>
+					<div class="span2 col-amount">
+						<span><%= _('Amount').translate() %></span>
+					</div>
+					<div class="span2">
+						&nbsp;
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<% view.collection.each(function (transaction){ %>
+			<%= paymentWizardCreditTransaction({
+				transaction: transaction
+			,	type: view.transaction_type
+			,	total: view.wizard.model.calculeTotal(true)
+			}) %>
+		<% }); %>
+		
+		<div class="payment-table-footer-alt">
+			<div class="row-fluid">
+				<div class="span8">
+					<p class="strong text-right">
+						<%= view.transaction_type === 'credit' ? _('Credits Subtotal').translate() : _('Deposits Subtotal').translate() %>
+					</p>
+				</div>
+				<div class="span4">
+					<p class="strong">
+						<span class="pull-right"><%= view.wizard.model.get(view.transaction_type === 'credit' ? 'credits_total_formatted' : 'deposits_total_formatted') %></span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
